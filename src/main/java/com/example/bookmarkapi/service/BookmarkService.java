@@ -1,6 +1,8 @@
 package com.example.bookmarkapi.service;
 
 import com.example.bookmarkapi.Repository.BookmarkRepository;
+import com.example.bookmarkapi.domain.BookMarkDto;
+import com.example.bookmarkapi.domain.BookMarkMapper;
 import com.example.bookmarkapi.domain.BookMarksDTO;
 import com.example.bookmarkapi.domain.Bookmark;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +21,14 @@ import java.time.Instant;
 public class BookmarkService {
 
     private final BookmarkRepository bookmarkRepository;
+    private final BookMarkMapper bookMarkMapper;
 
     @Transactional(readOnly= true)
     public BookMarksDTO getBookmark(Integer page){
         int pageNo = page < 1 ? 0 : page -1 ;
         Pageable pageable = PageRequest.of(pageNo, 10, Sort.Direction.DESC, "createdAt");
-        return new BookMarksDTO(bookmarkRepository.findAll(pageable));
+        Page<BookMarkDto> bookMarkDtos = bookmarkRepository.findAll(pageable).map(bookMarkMapper::toDto);
+        return new BookMarksDTO(bookMarkDtos);
 
     }
 
