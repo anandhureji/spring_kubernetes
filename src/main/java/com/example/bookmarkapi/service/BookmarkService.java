@@ -27,7 +27,7 @@ public class BookmarkService {
     public BookMarksDTO getBookmark(Integer page){
         int pageNo = page < 1 ? 0 : page -1 ;
         Pageable pageable = PageRequest.of(pageNo, 10, Sort.Direction.DESC, "createdAt");
-        Page<BookMarkDto> bookMarkDtos = bookmarkRepository.findAll(pageable).map(bookMarkMapper::toDto);
+        Page<BookMarkDto> bookMarkDtos = bookmarkRepository.findBookMarks(pageable);
         return new BookMarksDTO(bookMarkDtos);
 
     }
